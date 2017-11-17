@@ -366,6 +366,13 @@ public class ThemeableBrowser extends CordovaPlugin {
             Uri uri = Uri.parse(url);
             if ("file".equals(uri.getScheme())) {
                 intent.setDataAndType(uri, webView.getResourceApi().getMimeType(uri));
+                //如果是安装apk文件，需要添加标识，以在安装完成后弹窗打开按钮
+                String segment=uri.getLastPathSegment();
+                Log.i("myLog",segment.substring(segment.length()-4,segment.length()));
+                if(segment!=null&&segment.length()>4
+                        &&segment.substring(segment.length()-4,segment.length()).equals(".apk")){
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
             } else {
                 intent.setData(uri);
             }
