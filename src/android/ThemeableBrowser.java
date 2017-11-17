@@ -1222,7 +1222,12 @@ public class ThemeableBrowser extends CordovaPlugin {
                 } catch (android.content.ActivityNotFoundException e) {
                     Log.e(LOG_TAG, "Error dialing " + url + ": " + e.toString());
                 }
-            } else if (url.startsWith("geo:") || url.startsWith(WebView.SCHEME_MAILTO) || url.startsWith("market:")) {
+            } else if (url.startsWith("geo:") 
+                       || url.startsWith(WebView.SCHEME_MAILTO) 
+                       || url.startsWith("market:")
+                       || url.startsWith("weixin://wap/pay?")
+                       || url.startsWith("alipays:")
+                       || url.startsWith("alipay")) {
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(url));
