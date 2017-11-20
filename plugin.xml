@@ -80,6 +80,6 @@
          <resource-file src="src/ios/Resources/close@2x.png" />
          <resource-file src="src/ios/Resources/close_pressed@2x.png" />
          <resource-file src="src/ios/Resources/menu@2x.png" />
-         <resource-file src="src/ios/Resources/menu_pressed@2x.png.png" />
+         <resource-file src="src/ios/Resources/menu_pressed@2x.png" />
     </platform>
 </plugin>
