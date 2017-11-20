@@ -1376,7 +1376,7 @@
     CGFloat webviewOffset = _browserOptions.fullscreen ? 0.0 : toolbarHeight;
 
     if ([_browserOptions.toolbarposition isEqualToString:kThemeableBrowserToolbarBarPositionTop]) {
-        if(@available(iOS 11.0,*)) webviewOffset+=20; /适配iOS11
+        if(@available(iOS 11.0,*)) webviewOffset+=20; //适配iOS11
         [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, webviewOffset, self.webView.frame.size.width, self.webView.frame.size.height)];
         [self.toolbar setFrame:CGRectMake(self.toolbar.frame.origin.x, [self getStatusBarOffset], self.toolbar.frame.size.width, self.toolbar.frame.size.height)];
     }
