@@ -21,7 +21,7 @@
 <plugin
       xmlns="http://apache.org/cordova/ns/plugins/1.0"
       id="cordova-plugin-themeablebrowser"
-      version="0.3.0">
+      version="0.3.1">
 
     <name>ThemeableBrowser</name>
     <description>Cordova ThemeableBrowser Plugin</description>
@@ -72,6 +72,10 @@
 
         <header-file src="src/ios/CDVThemeableBrowser.h" />
         <source-file src="src/ios/CDVThemeableBrowser.m" />
+        <source-file src="src/ios/NJKWebViewProgress.h" />
+        <source-file src="src/ios/NJKWebViewProgress.m" />
+        <source-file src="src/ios/NJKWebViewProgressView.h" />
+        <source-file src="src/ios/NJKWebViewProgressView.m" />
 
         <framework src="CoreGraphics.framework" />
 

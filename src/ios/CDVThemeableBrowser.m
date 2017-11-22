@@ -679,6 +679,11 @@
 
 @synthesize currentURL;
 
+-(void)webViewProgress:(NJKWebViewProgress *)webViewProgress updateProgress:(float)progress
+{
+    NSLog(@"%f",progress);
+    [self.webViewProgressView setProgress:progress animated:YES];
+}
 - (id)initWithUserAgent:(NSString*)userAgent prevUserAgent:(NSString*)prevUserAgent browserOptions: (CDVThemeableBrowserOptions*) browserOptions navigationDelete:(CDVThemeableBrowser*) navigationDelegate statusBarStyle:(UIStatusBarStyle) statusBarStyle
 {
     self = [super init];
@@ -686,6 +691,7 @@
         _userAgent = userAgent;
         _prevUserAgent = prevUserAgent;
         _browserOptions = browserOptions;
+        _progressProxy=[[NJKWebViewProgress alloc] init];
 #ifdef __CORDOVA_4_0_0
         _webViewDelegate = [[CDVUIWebViewDelegate alloc] initWithDelegate:self];
 #else
@@ -702,7 +708,7 @@
 - (void)createViews
 {
     // We create the views in code for primarily for ease of upgrades and not requiring an external .xib to be included
-
+    
     CGRect webViewBounds = self.view.bounds;
     BOOL toolbarIsAtBottom = ![_browserOptions.toolbarposition isEqualToString:kThemeableBrowserToolbarBarPositionTop];
     NSDictionary* toolbarProps = _browserOptions.toolbar;
@@ -927,6 +933,21 @@
     [self.view addSubview:self.toolbar];
     // [self.view addSubview:self.addressLabel];
     // [self.view addSubview:self.spinner];
+    
+    self.webView.delegate = _progressProxy;
+    _progressProxy.webViewProxyDelegate = self;
+    _progressProxy.progressDelegate = self;
+    
+    CGRect navBounds = self.toolbar.bounds;
+    CGRect barFrame = CGRectMake(0,
+                                 navBounds.size.height - 3,
+                                 navBounds.size.width,
+                                 3);
+    self.webViewProgressView = [[NJKWebViewProgressView alloc] initWithFrame:barFrame];
+    self.webViewProgressView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    [self.webViewProgressView setProgress:0 animated:YES];
+    [self.toolbar addSubview:self.webViewProgressView];
+    
 }
 
 /**
@@ -1376,8 +1397,9 @@
     CGFloat webviewOffset = _browserOptions.fullscreen ? 0.0 : toolbarHeight;
 
     if ([_browserOptions.toolbarposition isEqualToString:kThemeableBrowserToolbarBarPositionTop]) {
-        if(@available(iOS 11.0,*)) webviewOffset+=20; //适配iOS11
-        [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, webviewOffset, self.webView.frame.size.width, self.webView.frame.size.height)];
+        int offset=0;
+        if(@available(iOS 11.0,*)) offset=20; //适配iOS11
+        [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, webviewOffset+offset, self.webView.frame.size.width, self.webView.frame.size.height-offset)];
         [self.toolbar setFrame:CGRectMake(self.toolbar.frame.origin.x, [self getStatusBarOffset], self.toolbar.frame.size.width, self.toolbar.frame.size.height)];
     }
 
