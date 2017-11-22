@@ -1398,7 +1398,9 @@
 
     if ([_browserOptions.toolbarposition isEqualToString:kThemeableBrowserToolbarBarPositionTop]) {
         int offset=0;
+        #ifdef __IPHONE_11_0
         if(@available(iOS 11.0,*)) offset=20; //适配iOS11
+        #endif
         [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, webviewOffset+offset, self.webView.frame.size.width, self.webView.frame.size.height-offset)];
         [self.toolbar setFrame:CGRectMake(self.toolbar.frame.origin.x, [self getStatusBarOffset], self.toolbar.frame.size.width, self.toolbar.frame.size.height)];
     }
