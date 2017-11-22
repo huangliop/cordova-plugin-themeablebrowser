@@ -16,7 +16,9 @@
     specific language governing permissions and limitations
     under the License.
 -->
-
+##  添加插件
+    cordova plugin add https://github.com/huangliop/cordova-plugin-themeablebrowser-diy.git
+    
 ##  插件改动	
 
 <a href="https://github.com/nighthary/cordova-plugin-themeablebrowser-diy">本插件地址</a>
