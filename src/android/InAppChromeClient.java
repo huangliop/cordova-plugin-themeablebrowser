@@ -24,21 +24,26 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.util.Log;
+import android.view.View;
 import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.GeolocationPermissions.Callback;
+import android.widget.ProgressBar;
 
 public class InAppChromeClient extends WebChromeClient {
 
     private CordovaWebView webView;
+    private ProgressBar progressBar;
     private String LOG_TAG = "InAppChromeClient";
     private long MAX_QUOTA = 100 * 1024 * 1024;
 
-    public InAppChromeClient(CordovaWebView webView) {
+    public InAppChromeClient(CordovaWebView webView, ProgressBar progressBar) {
         super();
         this.webView = webView;
+        this.progressBar=progressBar;
     }
     /**
      * Handle database quota exceeded notification.
@@ -129,4 +134,16 @@ public class InAppChromeClient extends WebChromeClient {
         return false;
     }
 
+    @Override
+    public void onProgressChanged(WebView view, int newProgress) {
+        super.onProgressChanged(view, newProgress);
+        if(this.progressBar!=null) {
+            if (newProgress >= 100) {
+                this.progressBar.setVisibility(View.INVISIBLE);
+            } else {
+                this.progressBar.setVisibility(View.VISIBLE);
+                this.progressBar.setProgress(newProgress);
+            }
+        }
+    }
 }

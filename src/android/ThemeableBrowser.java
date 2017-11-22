@@ -25,6 +25,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -58,6 +59,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -586,6 +588,15 @@ public class ThemeableBrowser extends CordovaPlugin {
                                         toolbarDef.wwwImage));
                     }
                 }
+                ProgressBar progressBar=new ProgressBar(cordova.getActivity(),null,android.R.attr.progressBarStyleHorizontal);
+                progressBar.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+                progressBar.getProgressDrawable().setColorFilter(Color.GREEN,android.graphics.PorterDuff.Mode.SRC_IN);
+                LinearLayout progressContainer=new LinearLayout(cordova.getActivity());
+                FrameLayout.LayoutParams progressContainerParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, dpToPixels(2));
+                progressContainerParams.gravity = Gravity.BOTTOM | Gravity.CENTER_VERTICAL;
+                progressContainer.setLayoutParams(progressContainerParams);
+                progressContainer.setVerticalGravity(Gravity.CENTER_VERTICAL);
+                progressContainer.addView(progressBar);
 
                 // Left Button Container layout
                 LinearLayout leftButtonContainer = new LinearLayout(cordova.getActivity());
@@ -764,7 +775,7 @@ public class ThemeableBrowser extends CordovaPlugin {
                     ((LinearLayout.LayoutParams) inAppWebViewParams).weight = 1;
                 }
                 inAppWebView.setLayoutParams(inAppWebViewParams);
-                inAppWebView.setWebChromeClient(new InAppChromeClient(thatWebView));
+                inAppWebView.setWebChromeClient(new InAppChromeClient(thatWebView,progressBar));
                 WebViewClient client = new ThemeableBrowserClient(thatWebView, new PageLoadListener() {
                     @Override
                     public void onPageFinished(String url, boolean canGoBack, boolean canGoForward) {
@@ -912,7 +923,8 @@ public class ThemeableBrowser extends CordovaPlugin {
                 // Don't show address bar.
                 // toolbar.addView(edittext);
                 toolbar.addView(rightButtonContainer);
-
+                //add progress bar
+                toolbar.addView(progressContainer);
                 if (title != null) {
                     int titleMargin = Math.max(
                             leftContainerWidth, rightContainerWidth);
