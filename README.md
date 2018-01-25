@@ -21,88 +21,16 @@
     
 ##  插件改动	
 
-<a href="https://github.com/nighthary/cordova-plugin-themeablebrowser-diy">本插件地址</a>
 
 <a href="https://github.com/initialxy/cordova-plugin-themeablebrowser">原插件地址</a>
 
-	update at 20171122 添加网页加载进度条
-	update at 20171117 对Android版本添加对微信支付和支付宝支付的支持
-	update at 20170310 对Inappbrowser进行个性化定制,使得在使用window.open打开view时里面的包含指定TAG的A标签可以通过系统浏览器打开，而不是在本view中打开.
-	
-###Android改动
-InAppBrowser 修改line:848
-
 ```
-	if(url.startsWith("http") && url.contains("__open-system-browser__=true")){
-        String urlStr = "__open-system-browser__=true";
-        //跳转到系统浏览器
-        String newurl=getString(url,urlStr);
-        Uri newuri=Uri.parse(newurl);
-        Intent intent=new Intent();
-        intent.setAction("android.intent.action.VIEW");
-        intent.setData(newuri);
-        this.webView.getContext().startActivity(intent);
+update at 20180125 添加android对input type='file' 的支持
+update at 20171122 添加网页加载进度条
+update at 20171117 对Android版本添加对微信支付和支付宝支付的支持
+update at 20170310 对Inappbrowser进行个性化定制,使得在使用window.open打开view时里面的包含指定TAG的A标签可以通过系统浏览器打开，而不是在本view中打开.
+```	
 
-        return true;
-    }
-    // 拆分URL
-    public String getString(String url, String strurl)
-    {
-        int postion = url.indexOf(strurl);
-        String newString = "";
-        if(postion > 0){
-            newString = url.substring(0,postion);
-        }else{
-            newString = url;
-        }
-        return newString;//返回已经删除好的字符串
-    }
-            
-```
-
-###IOS改动
-CDVInAppBrowser.m  修改line:897
-
-```
-	if (navigationType == UIWebViewNavigationTypeLinkClicked) {
-        if ([self openInSystemBrowser:request.URL]) {
-            return NO;
-        }
-    }
-    
-- (BOOL)openInSystemBrowser:(NSURL *)url{
-    NSString *urlString = url.absoluteString;
-    NSRange range = [urlString rangeOfString:@"?"];
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    NSString *parameters = [urlString substringFromIndex:(int)(range.location+1)];
-    NSArray *subArray = [parameters componentsSeparatedByString:@"&"];
-    for (int i = 0; i < subArray.count; i ++) {
-        NSArray *dicArr = [subArray[i] componentsSeparatedByString:@"="];
-        [dict setObject:dicArr[1] forKey:dicArr[0]];
-    }
-    NSString * flag = [dict objectForKey:@"__open-system-browser__"];
-    if (flag && [flag isEqualToString:@"true"]) {
-
-        NSRange range = [urlString rangeOfString:@"&" options:NSBackwardsSearch];
-
-        NSString *fixedUrlStr = [urlString substringWithRange:NSMakeRange(0, range.location)];
-
-        NSURL *fixedUrl = [NSURL URLWithString:fixedUrlStr];
-
-        [[UIApplication sharedApplication] openURL:fixedUrl];
-
-        return YES;
-
-    }else{
-
-        return NO;
-
-    }
-}
-```
-
-cordova-plugin-themeablebrowser
-===============================
 
 This plugin is a fork of [org.apache.cordova.inappbrowser](https://github.com/apache/cordova-plugin-inappbrowser). It attempts to retain most of the features of the InAppBrowser. In fact, for the full list of features inherited from InAppBrowser, please refer to [InAppBrowser's documentation](https://github.com/apache/cordova-plugin-inappbrowser/blob/master/README.md).
 

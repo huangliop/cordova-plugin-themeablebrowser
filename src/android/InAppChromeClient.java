@@ -18,15 +18,22 @@
 */
 package com.initialxy.cordova.themeablebrowser;
 
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.LOG;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JsPromptResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
@@ -35,15 +42,23 @@ import android.widget.ProgressBar;
 
 public class InAppChromeClient extends WebChromeClient {
 
+    public final int FILECHOOSER_REQUESTCODE=90;
     private CordovaWebView webView;
     private ProgressBar progressBar;
     private String LOG_TAG = "InAppChromeClient";
     private long MAX_QUOTA = 100 * 1024 * 1024;
+    /**
+     * 选中后的回调
+     */
+    private ValueCallback<Uri[]> uploadMessageAbovel;
+    private ValueCallback<Uri> uploadMessage;
+    private CordovaPlugin cordovaPlugin;
 
-    public InAppChromeClient(CordovaWebView webView, ProgressBar progressBar) {
+    public InAppChromeClient(CordovaWebView webView, ProgressBar progressBar, CordovaPlugin cordova) {
         super();
         this.webView = webView;
         this.progressBar=progressBar;
+        this.cordovaPlugin=cordova;
     }
     /**
      * Handle database quota exceeded notification.
@@ -144,6 +159,51 @@ public class InAppChromeClient extends WebChromeClient {
                 this.progressBar.setVisibility(View.VISIBLE);
                 this.progressBar.setProgress(newProgress);
             }
+        }
+    }
+
+    //For Android  >= 4.1
+    protected void openFileChooser(ValueCallback<Uri> valueCallback, String acceptType, String capture) {
+        this.uploadMessage=valueCallback;
+        this.openImageChoes();
+    }
+
+    @Override
+    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+        this.uploadMessageAbovel=filePathCallback;
+        this.openImageChoes();
+        return true;
+    }
+    protected void openFileChooser(ValueCallback<Uri> uploadMsg)
+    {
+        this.uploadMessage=uploadMsg;
+        this.openImageChoes();
+    }
+    private void openImageChoes(){
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        cordovaPlugin.cordova.startActivityForResult(cordovaPlugin,i,FILECHOOSER_REQUESTCODE);
+    }
+
+    /**
+     * 收到图片成功回调
+     */
+    public void onReceiveeValue(int requestCode,int resultCode,Intent intent){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            if (requestCode == FILECHOOSER_REQUESTCODE){
+                if (uploadMessageAbovel == null)
+                    return;
+                uploadMessageAbovel.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, intent));
+                uploadMessageAbovel = null;
+            }
+        }
+        else if (requestCode == FILECHOOSER_REQUESTCODE){
+            if (null == uploadMessage) return;
+            Uri result = intent == null || resultCode != cordovaPlugin.cordova.getActivity().RESULT_OK ? null : intent.getData();
+            uploadMessage.onReceiveValue(result);
+            uploadMessage = null;
         }
     }
 }

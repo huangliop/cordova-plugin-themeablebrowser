@@ -110,6 +110,7 @@ public class ThemeableBrowser extends CordovaPlugin {
     private WebView inAppWebView;
     private EditText edittext;
     private CallbackContext callbackContext;
+    private InAppChromeClient chromeClient;
 
     /**
      * Executes the request and returns PluginResult.
@@ -534,7 +535,7 @@ public class ThemeableBrowser extends CordovaPlugin {
      */
     public String showWebPage(final String url, final Options features) {
         final CordovaWebView thatWebView = this.webView;
-
+        final CordovaPlugin cordovaPlugin=this;
         // Create dialog in new thread
         Runnable runnable = new Runnable() {
             @SuppressLint("NewApi")
@@ -775,7 +776,8 @@ public class ThemeableBrowser extends CordovaPlugin {
                     ((LinearLayout.LayoutParams) inAppWebViewParams).weight = 1;
                 }
                 inAppWebView.setLayoutParams(inAppWebViewParams);
-                inAppWebView.setWebChromeClient(new InAppChromeClient(thatWebView,progressBar));
+                chromeClient=new InAppChromeClient(thatWebView,progressBar,cordovaPlugin);
+                inAppWebView.setWebChromeClient(chromeClient);
                 WebViewClient client = new ThemeableBrowserClient(thatWebView, new PageLoadListener() {
                     @Override
                     public void onPageFinished(String url, boolean canGoBack, boolean canGoForward) {
@@ -1501,5 +1503,12 @@ public class ThemeableBrowser extends CordovaPlugin {
         public String color;
         public String staticText;
         public boolean showPageTitle;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        chromeClient.onReceiveeValue(requestCode,resultCode,intent);
     }
 }
