@@ -206,4 +206,14 @@ public class InAppChromeClient extends WebChromeClient {
             uploadMessage = null;
         }
     }
+
+    /**
+     * 支持JS调用 window.close()
+     * @param window
+     */
+    @Override
+    public void onCloseWindow(WebView window) {
+        super.onCloseWindow(window);
+        ((ThemeableBrowser)cordovaPlugin).closeDialog();
+    }
 }

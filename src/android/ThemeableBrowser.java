@@ -925,8 +925,6 @@ public class ThemeableBrowser extends CordovaPlugin {
                 // Don't show address bar.
                 // toolbar.addView(edittext);
                 toolbar.addView(rightButtonContainer);
-                //add progress bar
-                toolbar.addView(progressContainer);
                 if (title != null) {
                     int titleMargin = Math.max(
                             leftContainerWidth, rightContainerWidth);
@@ -944,6 +942,8 @@ public class ThemeableBrowser extends CordovaPlugin {
 
                 // Don't add the toolbar if its been disabled
                 if (features.location) {
+                    //add progress bar
+                    toolbar.addView(progressContainer);
                     // Add our toolbar to our main view/layout
                     main.addView(toolbar);
                 }

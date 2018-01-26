@@ -1490,6 +1490,10 @@
 
     if (isTopLevelNavigation) {
         self.currentURL = request.URL;
+        //Support window.close()
+        if([@"uniquescheme://window.close"isEqualToString:[self.currentURL absoluteString]]){
+            [self close];
+        }
     }
 
     [self updateButtonDelayed:theWebView];
@@ -1529,7 +1533,9 @@
     if (isPDF) {
         [CDVUserAgentUtil setUserAgent:_prevUserAgent lockToken:_userAgentLockToken];
     }
-
+    //Supoort window.close()
+    [self.webView stringByEvaluatingJavaScriptFromString:@"window.close=function(){location.href='uniquescheme://window.close';}"];
+    
     [self.navigationDelegate webViewDidFinishLoad:theWebView];
 }
 
@@ -1665,6 +1671,12 @@
 #pragma mark CDVScreenOrientationDelegate
 
 @implementation CDVThemeableBrowserNavigationController : UINavigationController
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion
+{
+    if (self.presentedViewController) {
+        [super dismissViewControllerAnimated:flag completion:completion];
+    }
+}
 
 - (BOOL)shouldAutorotate
 {
