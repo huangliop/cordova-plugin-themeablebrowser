@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.provider.Browser;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -111,6 +112,8 @@ public class ThemeableBrowser extends CordovaPlugin {
     private EditText edittext;
     private CallbackContext callbackContext;
     private InAppChromeClient chromeClient;
+    //
+    private View circleProgressBar;
 
     /**
      * Executes the request and returns PluginResult.
@@ -947,6 +950,11 @@ public class ThemeableBrowser extends CordovaPlugin {
                     // Add our toolbar to our main view/layout
                     main.addView(toolbar);
                 }
+                //
+                if(toolbarDef.height==0){
+                    circleProgressBar=createCircleProgressBar();
+                    main.addView(circleProgressBar);
+                }
 
                 if (!features.fullscreen) {
                     // If not full screen, we add inAppWebView after adding toolbar.
@@ -1353,7 +1361,7 @@ public class ThemeableBrowser extends CordovaPlugin {
             if (!newloc.equals(edittext.getText().toString())) {
                 edittext.setText(newloc);
             }
-
+            if(circleProgressBar!=null)circleProgressBar.setVisibility(View.VISIBLE);
             try {
                 JSONObject obj = new JSONObject();
                 obj.put("type", LOAD_START_EVENT);
@@ -1371,7 +1379,7 @@ public class ThemeableBrowser extends CordovaPlugin {
                 JSONObject obj = new JSONObject();
                 obj.put("type", LOAD_STOP_EVENT);
                 obj.put("url", url);
-
+                circleProgressBar.setVisibility(View.GONE);
                 sendUpdate(obj, true);
 
                 if (this.callback != null) {
@@ -1508,7 +1516,21 @@ public class ThemeableBrowser extends CordovaPlugin {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-
+        //选择文件的回调
         chromeClient.onReceiveeValue(requestCode,resultCode,intent);
+    }
+
+    /**
+     * 创建圆形loading，用于在没有toolbar的情况下显示加载状态
+     * @return
+     */
+    private View createCircleProgressBar(){
+        RelativeLayout layout=new RelativeLayout(cordova.getActivity());
+        layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+        layout.setBackgroundColor(Color.WHITE);
+        ProgressBar bar =new ProgressBar(cordova.getActivity());
+        layout.setGravity(Gravity.CENTER);
+        layout.addView(bar);
+        return layout;
     }
 }
