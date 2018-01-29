@@ -683,7 +683,9 @@
 {
     NSLog(@"%f",progress);
     [self.webViewProgressView setProgress:progress animated:YES];
-    if(progress>=1)[self.indicator stopAnimating];
+    if(progress>=1){
+        [self.indicator stopAnimating];
+    }
 }
 - (id)initWithUserAgent:(NSString*)userAgent prevUserAgent:(NSString*)prevUserAgent browserOptions: (CDVThemeableBrowserOptions*) browserOptions navigationDelete:(CDVThemeableBrowser*) navigationDelegate statusBarStyle:(UIStatusBarStyle) statusBarStyle
 {
@@ -1541,6 +1543,7 @@
     [self.webView stringByEvaluatingJavaScriptFromString:@"window.close=function(){location.href='uniquescheme://window.close';}"];
     
     [self.navigationDelegate webViewDidFinishLoad:theWebView];
+    [self.webViewProgressView setProgress:1 animated:NO];
 }
 
 - (void)webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error
