@@ -683,6 +683,7 @@
 {
     NSLog(@"%f",progress);
     [self.webViewProgressView setProgress:progress animated:YES];
+    if(progress>=1)[self.indicator stopAnimating];
 }
 - (id)initWithUserAgent:(NSString*)userAgent prevUserAgent:(NSString*)prevUserAgent browserOptions: (CDVThemeableBrowserOptions*) browserOptions navigationDelete:(CDVThemeableBrowser*) navigationDelegate statusBarStyle:(UIStatusBarStyle) statusBarStyle
 {
@@ -714,7 +715,7 @@
     NSDictionary* toolbarProps = _browserOptions.toolbar;
     CGFloat toolbarHeight = [self getFloatFromDict:toolbarProps withKey:kThemeableBrowserPropHeight withDefault:TOOLBAR_DEF_HEIGHT];
     if (!_browserOptions.fullscreen) {
-        webViewBounds.size.height -= toolbarHeight;
+        webViewBounds.size.height -= (toolbarHeight+ [self getStatusBarOffset]);
     }
     self.webView = [[UIWebView alloc] initWithFrame:webViewBounds];
 
@@ -947,7 +948,13 @@
     self.webViewProgressView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self.webViewProgressView setProgress:0 animated:YES];
     [self.toolbar addSubview:self.webViewProgressView];
-    
+    //圆形loading
+    self.indicator=[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.indicator.frame=CGRectMake(0, 0, 40, 40);
+    self.indicator.center=self.view.center;
+    [self.view addSubview:self.indicator];
+    [self.indicator bringSubviewToFront:self.view];
+    if(toolbarHeight<=0) [self.indicator startAnimating];
 }
 
 /**
@@ -1394,15 +1401,12 @@
 
 - (void) rePositionViews {
     CGFloat toolbarHeight = [self getFloatFromDict:_browserOptions.toolbar withKey:kThemeableBrowserPropHeight withDefault:TOOLBAR_DEF_HEIGHT];
-    CGFloat webviewOffset = _browserOptions.fullscreen ? 0.0 : toolbarHeight;
-
+    CGFloat statusBarOffset = [self getStatusBarOffset];
+    CGFloat webviewOffset = _browserOptions.fullscreen ? 0.0 : toolbarHeight + statusBarOffset;
     if ([_browserOptions.toolbarposition isEqualToString:kThemeableBrowserToolbarBarPositionTop]) {
-        int offset=0;
-        #ifdef __IPHONE_11_0
-        if(@available(iOS 11.0,*)) offset=20; //适配iOS11
-        #endif
-        [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, webviewOffset+offset, self.webView.frame.size.width, self.webView.frame.size.height-offset)];
-        [self.toolbar setFrame:CGRectMake(self.toolbar.frame.origin.x, [self getStatusBarOffset], self.toolbar.frame.size.width, self.toolbar.frame.size.height)];
+        [self.webView setFrame:CGRectMake(self.webView.frame.origin.x, webviewOffset, self.webView.frame.size.width, self.webView.frame.size.height)];
+//        [self.toolbar setFrame:CGRectMake(self.toolbar.frame.origin.x, [self getStatusBarOffset], self.toolbar.frame.size.width, self.toolbar.frame.size.height)];
+         [self.toolbar setFrame:CGRectMake(self.toolbar.frame.origin.x, statusBarOffset, self.toolbar.frame.size.width, self.toolbar.frame.size.height)];
     }
 
     CGFloat screenWidth = CGRectGetWidth(self.view.frame);

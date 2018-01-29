@@ -16,15 +16,16 @@
     specific language governing permissions and limitations
     under the License.
 -->
+
+<a href="https://github.com/initialxy/cordova-plugin-themeablebrowser">原插件地址</a>
+
 ##  添加插件
     cordova plugin add https://github.com/huangliop/cordova-plugin-themeablebrowser-diy.git
     
 ##  插件改动	
 
-
-<a href="https://github.com/initialxy/cordova-plugin-themeablebrowser">原插件地址</a>
-
 ```
+update at 20180129 1.添加window.close()的支持（即关闭当前窗口）。2.当toolbar 的height为0时（即不显示上方的导航栏），添加一个loading图标的显示。
 update at 20180125 添加android对input type='file' 的支持
 update at 20171122 添加网页加载进度条
 update at 20171117 对Android版本添加对微信支付和支付宝支付的支持

@@ -1379,7 +1379,7 @@ public class ThemeableBrowser extends CordovaPlugin {
                 JSONObject obj = new JSONObject();
                 obj.put("type", LOAD_STOP_EVENT);
                 obj.put("url", url);
-                circleProgressBar.setVisibility(View.GONE);
+                if(circleProgressBar!=null)circleProgressBar.setVisibility(View.GONE);
                 sendUpdate(obj, true);
 
                 if (this.callback != null) {
