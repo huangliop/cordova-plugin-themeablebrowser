@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-themeablebrowser",
-  "version": "0.2.18",
+  "version": "0.3.4",
   "description": "Cordova ThemeableBrowser Plugin",
   "cordova": {
     "id": "cordova-plugin-themeablebrowser",

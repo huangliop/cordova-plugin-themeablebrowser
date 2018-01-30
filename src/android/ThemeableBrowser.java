@@ -594,7 +594,7 @@ public class ThemeableBrowser extends CordovaPlugin {
                 }
                 ProgressBar progressBar=new ProgressBar(cordova.getActivity(),null,android.R.attr.progressBarStyleHorizontal);
                 progressBar.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
-                progressBar.getProgressDrawable().setColorFilter(Color.GREEN,android.graphics.PorterDuff.Mode.SRC_IN);
+                progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#3b50ce"),android.graphics.PorterDuff.Mode.SRC_IN);
                 LinearLayout progressContainer=new LinearLayout(cordova.getActivity());
                 FrameLayout.LayoutParams progressContainerParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, dpToPixels(2));
                 progressContainerParams.gravity = Gravity.BOTTOM | Gravity.CENTER_VERTICAL;
@@ -1511,13 +1511,6 @@ public class ThemeableBrowser extends CordovaPlugin {
         public String color;
         public String staticText;
         public boolean showPageTitle;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        //选择文件的回调
-        chromeClient.onReceiveeValue(requestCode,resultCode,intent);
     }
 
     /**
