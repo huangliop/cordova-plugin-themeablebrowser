@@ -32,6 +32,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
@@ -59,11 +60,7 @@ public class InAppChromeClient extends WebChromeClient {
     private ProgressBar progressBar;
     private String LOG_TAG = "InAppChromeClient";
     private long MAX_QUOTA = 100 * 1024 * 1024;
-    /**
-     * 选中后的回调
-     */
-    private ValueCallback<Uri[]> uploadMessageAbovel;
-    private ValueCallback<Uri> uploadMessage;
+
     private CordovaPlugin cordovaPlugin;
     /**
      * 保持文件选择中，如果选择相机拍摄，保存的Uri
@@ -191,17 +188,22 @@ public class InAppChromeClient extends WebChromeClient {
 
     public void openFileChooser(final ValueCallback<Uri> uploadMsg, String acceptType, String capture)
     {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        cordovaPlugin.cordova.startActivityForResult(new CordovaPlugin() {
-            @Override
-            public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-                Uri result = intent == null || resultCode != Activity.RESULT_OK ? null : intent.getData();
-                LOG.d(LOG_TAG, "Receive file chooser URL: " + result);
-                uploadMsg.onReceiveValue(result);
-            }
-        }, intent, FILECHOOSER_REQUESTCODE);
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType(acceptType);
+            cordovaPlugin.cordova.startActivityForResult(new CordovaPlugin() {
+                @Override
+                public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+                    Uri result = intent == null || resultCode != Activity.RESULT_OK ? null : intent.getData();
+                  if(result!=null) {
+                      String path = getImagePath(result, null);
+                      result = Uri.fromFile(new File(path));
+                      LOG.d(LOG_TAG, "Receive file chooser URL: " + result);
+                  }
+                    uploadMsg.onReceiveValue(result);
+                }
+            }, intent, FILECHOOSER_REQUESTCODE);
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -311,5 +313,25 @@ public class InAppChromeClient extends WebChromeClient {
                 storageDir      /* directory */
         );
         return image;
+    }
+
+    /**
+     * Uri to file path
+     * @param uri
+     * @param selection
+     * @return
+     */
+    private String getImagePath(Uri uri, String selection) {
+        if(uri==null)return null;
+        String path = null;
+        Cursor cursor =cordovaPlugin.cordova.getActivity().getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+
+            cursor.close();
+        }
+        return path;
     }
 }
