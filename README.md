@@ -25,6 +25,7 @@
 ##  插件改动	
 
 ```
+update at 20180131 1.添加对title字体大小的设置。2.添加对按钮的marginLeft和marginRight的实现
 update at 20180129 1.添加window.close()的支持（即关闭当前窗口）。2.当toolbar 的height为0时（即不显示上方的导航栏），添加一个loading图标的显示。
 update at 20180125 添加android对input type='file' 的支持
 update at 20171122 添加网页加载进度条
@@ -51,13 +52,15 @@ This plugin launches an in-app web view on top the existing [CordovaWebView](htt
         },
         title: {
             color: '#003264ff',
-            showPageTitle: true
+            showPageTitle: true,
+            textSize:18  //字体大小
         },
         backButton: {
             image: 'back',
             imagePressed: 'back_pressed',
             align: 'left',
-            event: 'backPressed'
+            event: 'backPressed',
+            marginLeft:20 //android和ios设置相同值时，表现的不一直，所以最好分开设置
         },
         forwardButton: {
             image: 'forward',
@@ -68,8 +71,9 @@ This plugin launches an in-app web view on top the existing [CordovaWebView](htt
         closeButton: {
             image: 'close',
             imagePressed: 'close_pressed',
-            align: 'left',
+            align: 'right',
             event: 'closePressed'
+            marginRight:20 //android和ios设置相同值时，表现的不一直，所以最好分开设置
         },
         customButtons: [
             {

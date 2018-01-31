@@ -27,6 +27,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -114,6 +115,7 @@ public class ThemeableBrowser extends CordovaPlugin {
     private InAppChromeClient chromeClient;
     //
     private View circleProgressBar;
+    private ProgressBar progressBar;
 
     /**
      * Executes the request and returns PluginResult.
@@ -417,6 +419,8 @@ public class ThemeableBrowser extends CordovaPlugin {
                         inAppWebView = null;
                         edittext = null;
                         callbackContext = null;
+                        progressBar=null;
+                        circleProgressBar=null;
                     }
                 });
 
@@ -592,9 +596,10 @@ public class ThemeableBrowser extends CordovaPlugin {
                                         toolbarDef.wwwImage));
                     }
                 }
-                ProgressBar progressBar=new ProgressBar(cordova.getActivity(),null,android.R.attr.progressBarStyleHorizontal);
+                progressBar=new ProgressBar(cordova.getActivity(),null,android.R.attr.progressBarStyleHorizontal);
                 progressBar.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
-                progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#3b50ce"),android.graphics.PorterDuff.Mode.SRC_IN);
+                progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#097ee2"),android.graphics.PorterDuff.Mode.SRC_IN);
+                progressBar.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
                 LinearLayout progressContainer=new LinearLayout(cordova.getActivity());
                 FrameLayout.LayoutParams progressContainerParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, dpToPixels(2));
                 progressContainerParams.gravity = Gravity.BOTTOM | Gravity.CENTER_VERTICAL;
@@ -687,9 +692,11 @@ public class ThemeableBrowser extends CordovaPlugin {
                     "close button",
                     new View.OnClickListener() {
                         public void onClick(View v) {
+                            String url="about:null";
+                            if(inAppWebView!=null)url=inAppWebView.getUrl();
                             emitButtonEvent(
                                     features.closeButton,
-                                    inAppWebView.getUrl());
+                                    url);
                             closeDialog();
                         }
                     }
@@ -767,6 +774,9 @@ public class ThemeableBrowser extends CordovaPlugin {
                                     ? features.title.color : "#000000ff"));
                     if (features.title.staticText != null) {
                         title.setText(features.title.staticText);
+                    }
+                    if(features.title.textSize!=0){
+                        title.setTextSize(features.title.textSize);
                     }
                 }
 
@@ -1168,8 +1178,10 @@ public class ThemeableBrowser extends CordovaPlugin {
         if (buttonProps != null) {
             result = new Button(cordova.getActivity());
             result.setContentDescription(description);
-            result.setLayoutParams(new LinearLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            lp.setMargins(dpToPixels(buttonProps.marginLeft),0,dpToPixels(buttonProps.marginRight),0);
+            result.setLayoutParams(lp);
             setButtonImages(result, buttonProps, DISABLED_ALPHA);
             if (listener != null) {
                 result.setOnClickListener(listener);
@@ -1362,6 +1374,7 @@ public class ThemeableBrowser extends CordovaPlugin {
                 edittext.setText(newloc);
             }
             if(circleProgressBar!=null)circleProgressBar.setVisibility(View.VISIBLE);
+            if(progressBar!=null)progressBar.setVisibility(View.VISIBLE);
             try {
                 JSONObject obj = new JSONObject();
                 obj.put("type", LOAD_START_EVENT);
@@ -1380,6 +1393,7 @@ public class ThemeableBrowser extends CordovaPlugin {
                 obj.put("type", LOAD_STOP_EVENT);
                 obj.put("url", url);
                 if(circleProgressBar!=null)circleProgressBar.setVisibility(View.GONE);
+                if(progressBar!=null)progressBar.setVisibility(View.GONE);
                 sendUpdate(obj, true);
 
                 if (this.callback != null) {
@@ -1493,6 +1507,8 @@ public class ThemeableBrowser extends CordovaPlugin {
         public String wwwImagePressed;
         public double wwwImageDensity = 1;
         public String align = ALIGN_LEFT;
+        public int marginLeft=0;
+        public int marginRight=0;
     }
 
     private static class BrowserMenu extends BrowserButton {
@@ -1511,6 +1527,7 @@ public class ThemeableBrowser extends CordovaPlugin {
         public String color;
         public String staticText;
         public boolean showPageTitle;
+        public int textSize;
     }
 
     /**

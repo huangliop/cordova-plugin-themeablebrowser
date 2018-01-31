@@ -34,6 +34,7 @@
 #define    kThemeableBrowserPropEvent @"event"
 #define    kThemeableBrowserPropLabel @"label"
 #define    kThemeableBrowserPropColor @"color"
+#define    kThemeableBrowserPropTextSize @"textSize"
 #define    kThemeableBrowserPropHeight @"height"
 #define    kThemeableBrowserPropImage @"image"
 #define    kThemeableBrowserPropWwwImage @"wwwImage"
@@ -46,6 +47,8 @@
 #define    kThemeableBrowserPropTitle @"title"
 #define    kThemeableBrowserPropCancel @"cancel"
 #define    kThemeableBrowserPropItems @"items"
+#define    kThemeableBrowserPropMarginLeft @"marginLeft"
+#define    kThemeableBrowserPropMarginRight @"marginRight"
 
 #define    kThemeableBrowserEmitError @"ThemeableBrowserError"
 #define    kThemeableBrowserEmitWarning @"ThemeableBrowserWarning"
@@ -924,7 +927,8 @@
         self.titleLabel.numberOfLines = 1;
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         self.titleLabel.textColor = [CDVThemeableBrowserViewController colorFromRGBA:[self getStringFromDict:_browserOptions.title withKey:kThemeableBrowserPropColor withDefault:@"#000000ff"]];
-
+        NSString *size=[self getStringFromDict:_browserOptions.title withKey:kThemeableBrowserPropTextSize withDefault:@"10"];
+        [self.titleLabel setFont: [UIFont systemFontOfSize:[size floatValue]] ];
         if (_browserOptions.title[kThemeableBrowserPropStaticText]) {
             self.titleLabel.text = _browserOptions.title[kThemeableBrowserPropStaticText];
         }
@@ -949,6 +953,7 @@
     self.webViewProgressView = [[NJKWebViewProgressView alloc] initWithFrame:barFrame];
     self.webViewProgressView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [self.webViewProgressView setProgress:0 animated:YES];
+    [self.webViewProgressView setTintColor:[UIColor colorWithRed:9 green:126 blue:226 alpha:1]];
     [self.toolbar addSubview:self.webViewProgressView];
     //圆形loading
     self.indicator=[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -1028,9 +1033,11 @@
                              withMessage:[NSString stringWithFormat:@"Pressed image for %@ is not defined.", description]];
         }
 
+        NSString *paddingLeft=[self getStringFromDict:buttonProps withKey:kThemeableBrowserPropMarginLeft withDefault:@"0"];
+        NSString *paddingRight=[self getStringFromDict:buttonProps withKey:kThemeableBrowserPropMarginRight withDefault:@"0"];
         if (buttonImage) {
             result = [UIButton buttonWithType:UIButtonTypeCustom];
-            result.bounds = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
+            result.bounds = CGRectMake([paddingLeft floatValue], 0, buttonImage.size.width+[paddingLeft floatValue]+[paddingRight floatValue], buttonImage.size.height);
 
             if (buttonImagePressed) {
                 [result setImage:buttonImagePressed forState:UIControlStateHighlighted];
@@ -1040,6 +1047,7 @@
             [result setImage:buttonImage forState:UIControlStateNormal];
             [result addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
         }
+        
     } else if (!buttonProps) {
         [self.navigationDelegate emitWarning:kThemeableBrowserEmitCodeUndefined
                                  withMessage:[NSString stringWithFormat:@"%@ is not defined. Button will not be shown.", description]];
