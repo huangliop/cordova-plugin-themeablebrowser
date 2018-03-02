@@ -25,6 +25,7 @@
 ##  插件改动	
 
 ```
+update at 20180302 1.在User-Agent插入标识“ThemeableBrowser/1.0”, 2.添加ThemeableBrowser.closeWindow()，来关系打开的webview
 update at 20180131 1.添加对title字体大小的设置。2.添加对按钮的marginLeft和marginRight的实现
 update at 20180129 1.添加window.close()的支持（即关闭当前窗口）。2.当toolbar 的height为0时（即不显示上方的导航栏），添加一个loading图标的显示。
 update at 20180125 添加android对input type='file' 的支持

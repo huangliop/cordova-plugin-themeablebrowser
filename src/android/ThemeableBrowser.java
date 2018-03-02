@@ -21,8 +21,8 @@ package com.initialxy.cordova.themeablebrowser;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.content.pm.ApplicationInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -38,7 +38,6 @@ import android.os.Bundle;
 import android.provider.Browser;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -53,6 +52,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -789,7 +789,7 @@ public class ThemeableBrowser extends CordovaPlugin {
                 if (!features.fullscreen) {
                     ((LinearLayout.LayoutParams) inAppWebViewParams).weight = 1;
                 }
-				//Debug版本添加webview的可调试
+                //Debug版本添加webview的可调试
                 ApplicationInfo applicationInfo=cordova.getActivity().getApplicationInfo();
                 if((applicationInfo.flags&ApplicationInfo.FLAG_DEBUGGABLE)!=0){
                     inAppWebView.setWebContentsDebuggingEnabled(true);
@@ -818,6 +818,11 @@ public class ThemeableBrowser extends CordovaPlugin {
                 });
                 inAppWebView.setWebViewClient(client);
                 WebSettings settings = inAppWebView.getSettings();
+				//set User-Agent
+                String userAgent=settings.getUserAgentString();
+                settings.setUserAgentString("ThemeableBrowser/1.0 "+userAgent);
+                Log.d("ThemeableBrowser","Change User-Agent:"+settings.getUserAgentString());
+				
                 settings.setJavaScriptEnabled(true);
                 settings.setJavaScriptCanOpenWindowsAutomatically(true);
                 settings.setBuiltInZoomControls(features.zoom);
@@ -845,6 +850,7 @@ public class ThemeableBrowser extends CordovaPlugin {
                 inAppWebView.getSettings().setUseWideViewPort(true);
                 inAppWebView.requestFocus();
                 inAppWebView.requestFocusFromTouch();
+                inAppWebView.addJavascriptInterface(new JsBridge(),"ThemeableBrowser");
 
                 // Add buttons to either leftButtonsContainer or
                 // rightButtonsContainer according to user's alignment
@@ -1548,5 +1554,15 @@ public class ThemeableBrowser extends CordovaPlugin {
         layout.setGravity(Gravity.CENTER);
         layout.addView(bar);
         return layout;
+    }
+
+    /**
+     * JS Brigde
+     */
+     class JsBridge {
+        @JavascriptInterface
+        public void closeWindow(){
+            closeDialog();
+        }
     }
 }

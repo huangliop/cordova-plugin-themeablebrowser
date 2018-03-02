@@ -1280,7 +1280,8 @@
     } else {
         [CDVUserAgentUtil acquireLock:^(NSInteger lockToken) {
             _userAgentLockToken = lockToken;
-            [CDVUserAgentUtil setUserAgent:_userAgent lockToken:lockToken];
+            NSString *newUserAgent=[@"ThemeableBrowser/1.0 " stringByAppendingString: _userAgent];
+            [CDVUserAgentUtil setUserAgent:newUserAgent lockToken:lockToken];
             [self.webView loadRequest:request];
         }];
     }
@@ -1548,7 +1549,7 @@
         [CDVUserAgentUtil setUserAgent:_prevUserAgent lockToken:_userAgentLockToken];
     }
     //Supoort window.close()
-    [self.webView stringByEvaluatingJavaScriptFromString:@"window.close=function(){location.href='uniquescheme://window.close';}"];
+    [self.webView stringByEvaluatingJavaScriptFromString:@"ThemeableBrowser={};ThemeableBrowser.closeWindow=window.close=function(){location.href='uniquescheme://window.close';}"];
     
     [self.navigationDelegate webViewDidFinishLoad:theWebView];
     [self.webViewProgressView setProgress:1 animated:NO];
