@@ -33,7 +33,9 @@ update at 20171122 添加网页加载进度条
 update at 20171117 对Android版本添加对微信支付和支付宝支付的支持
 update at 20170310 对Inappbrowser进行个性化定制,使得在使用window.open打开view时里面的包含指定TAG的A标签可以通过系统浏览器打开，而不是在本view中打开.
 ```	
+## 关闭当前窗口
 
+`ThemeableBrowser&ThemeableBrowser.closeWindow();`
 
 This plugin is a fork of [org.apache.cordova.inappbrowser](https://github.com/apache/cordova-plugin-inappbrowser). It attempts to retain most of the features of the InAppBrowser. In fact, for the full list of features inherited from InAppBrowser, please refer to [InAppBrowser's documentation](https://github.com/apache/cordova-plugin-inappbrowser/blob/master/README.md).
 
