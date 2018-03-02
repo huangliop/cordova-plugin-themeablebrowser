@@ -22,6 +22,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -787,6 +788,11 @@ public class ThemeableBrowser extends CordovaPlugin {
                         : new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0);
                 if (!features.fullscreen) {
                     ((LinearLayout.LayoutParams) inAppWebViewParams).weight = 1;
+                }
+				//Debug版本添加webview的可调试
+                ApplicationInfo applicationInfo=cordova.getActivity().getApplicationInfo();
+                if((applicationInfo.flags&ApplicationInfo.FLAG_DEBUGGABLE)!=0){
+                    inAppWebView.setWebContentsDebuggingEnabled(true);
                 }
                 inAppWebView.setLayoutParams(inAppWebViewParams);
                 chromeClient=new InAppChromeClient(thatWebView,progressBar,cordovaPlugin);
