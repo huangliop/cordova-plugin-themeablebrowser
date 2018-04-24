@@ -1510,7 +1510,12 @@
             [self close];
         }
     }
-
+    NSString* reqUrl = request.URL.absoluteString;
+    if ([reqUrl hasPrefix:@"alipays://"] || [reqUrl hasPrefix:@"alipay://"]) {
+        // NOTE: 跳转支付宝App
+        [[UIApplication sharedApplication]openURL:request.URL];
+        return NO;
+    }
     [self updateButtonDelayed:theWebView];
 
     return [self.navigationDelegate webView:theWebView shouldStartLoadWithRequest:request navigationType:navigationType];
