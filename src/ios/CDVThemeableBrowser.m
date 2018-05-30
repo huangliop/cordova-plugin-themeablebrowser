@@ -1581,7 +1581,12 @@
         self.forwardButton.enabled = theWebView.canGoForward;
     }
 }
-
+//解决iOS上状态栏下有一行空白的问题
+-(void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    _webView.scrollView.contentInset=UIEdgeInsetsZero;
+}
 /**
  * The reason why this method exists at all is because UIWebView is quite
  * terrible with dealing this hash change, which IS a history change. However

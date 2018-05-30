@@ -24,19 +24,22 @@
     
 ##  插件改动	
 
-```
-update at 20180302 1.在User-Agent插入标识“ThemeableBrowser/1.0”, 2.添加ThemeableBrowser.closeWindow()，来关系打开的webview
-update at 20180131 1.添加对title字体大小的设置。2.添加对按钮的marginLeft和marginRight的实现
-update at 20180129 1.添加window.close()的支持（即关闭当前窗口）。2.当toolbar 的height为0时（即不显示上方的导航栏），添加一个loading图标的显示。
-update at 20180125 添加android对input type='file' 的支持
-update at 20171122 添加网页加载进度条
-update at 20171117 对Android版本添加对微信支付和支付宝支付的支持
-update at 20170310 对Inappbrowser进行个性化定制,使得在使用window.open打开view时里面的包含指定TAG的A标签可以通过系统浏览器打开，而不是在本view中打开.
-```	
+
+- update at 20180530  解决iOS上状态栏下有一行空白的问题
+- update at 20180302 1.在User-Agent插入标识“ThemeableBrowser/1.0”, 2.添加ThemeableBrowser.closeWindow()，来关系打开的webview
+- update at 20180131 1.添加对title字体大小的设置。2.添加对按钮的marginLeft和marginRight的实现
+- update at 20180129 1.添加window.close()的支持（即关闭当前窗口）。2.当toolbar 的height为0时（即不显示上方的导航栏），添加一个loading图标的显示。
+- update at 20180125 添加android对input type='file' 的支持
+- update at 20171122 添加网页加载进度条
+- update at 20171117 对Android版本添加对微信支付和支付宝支付的支持
+- update at 20170310 对Inappbrowser进行个性化定制,使得在使用window.open打开view时里面的包含指定TAG的A标签可以通过系统浏览器打开，而不是在本view中打开.
+
+
 ## 关闭当前窗口
 
 `ThemeableBrowser&ThemeableBrowser.closeWindow();`
 
+## 使用方法
 This plugin is a fork of [org.apache.cordova.inappbrowser](https://github.com/apache/cordova-plugin-inappbrowser). It attempts to retain most of the features of the InAppBrowser. In fact, for the full list of features inherited from InAppBrowser, please refer to [InAppBrowser's documentation](https://github.com/apache/cordova-plugin-inappbrowser/blob/master/README.md).
 
 The purpose of this plugin is to provide an in-app-browser that can also be configured to match the theme of your app, in order to give it a more immersive look and feel for your app, as well as provide a more consistent look and feel across platforms.
