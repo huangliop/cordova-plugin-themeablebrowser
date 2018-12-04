@@ -24,8 +24,8 @@
     
 ##  插件改动	
 
-
-- update at 20180530  解决iOS上状态栏下有一行空白的问题
+- update at 20181204 解决iOS上支付宝和微信，支付后不能返回原来app的问题。安装插件后需要修改如下地方（请看下面的 关于设置URL Scheme）。
+- update at 20180530 解决iOS上状态栏下有一行空白的问题
 - update at 20180302 1.在User-Agent插入标识“ThemeableBrowser/1.0”, 2.添加ThemeableBrowser.closeWindow()，来关系打开的webview
 - update at 20180131 1.添加对title字体大小的设置。2.添加对按钮的marginLeft和marginRight的实现
 - update at 20180129 1.添加window.close()的支持（即关闭当前窗口）。2.当toolbar 的height为0时（即不显示上方的导航栏），添加一个loading图标的显示。
@@ -34,6 +34,15 @@
 - update at 20171117 对Android版本添加对微信支付和支付宝支付的支持
 - update at 20170310 对Inappbrowser进行个性化定制,使得在使用window.open打开view时里面的包含指定TAG的A标签可以通过系统浏览器打开，而不是在本view中打开.
 
+## 关于设置URL Schmem
+
+为了解决不能支付后不能回调的问题，需要自己手动修改代码
+
+> 1.在iOS工程中添加URL Scheme,内容为一个合法的微信支付域名，如" pay.my.com"
+
+> 2.搜索整个工程的"微信合法的支付域名"替换为上面配置的 "pay.my.com"
+
+> 3.搜索整个工程的"appUrlScheme"替换为自己app 的URL Scheme,如果没有请自己配置一个
 
 ## 关闭当前窗口
 

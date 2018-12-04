@@ -1511,9 +1511,29 @@
         }
     }
     NSString* reqUrl = request.URL.absoluteString;
+    //出来微信支付后，会打开safari的问题
+    if([reqUrl hasPrefix:@"https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb"]){
+        NSDictionary *headers = [request allHTTPHeaderFields];
+        NSString *preStr = @"https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb";
+        if (![[headers objectForKey:@"Referer"] isEqualToString:@"微信合法的支付域名://"] && [request.URL.absoluteString hasPrefix:preStr]) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSString* urlStr=[reqUrl componentsSeparatedByString:@"&redirect_url="][0];
+                    NSURL *url = [NSURL URLWithString:urlStr];
+                    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+                    [req setHTTPMethod:@"GET"];
+                    [req setValue:@"微信合法的支付域名://" forHTTPHeaderField:@"Referer"];
+                    [theWebView loadRequest:req];
+                });
+            });
+            
+            return YES;
+        }
+    }
     if ([reqUrl hasPrefix:@"alipays://"] || [reqUrl hasPrefix:@"alipay://"]) {
-        // NOTE: 跳转支付宝App
-        [[UIApplication sharedApplication]openURL:request.URL];
+        // NOTE: 跳转支付宝App,这里替换alipays为自动app的URL Scheme，主要是为了解决支付宝支付后不能回到原来的app的问题
+       NSString* url=[reqUrl stringByReplacingOccurrencesOfString:@"alipays" withString:@"appUrlScheme"];
+        [[UIApplication sharedApplication]openURL:[NSURL URLWithString:url]];
         return NO;
     }
     [self updateButtonDelayed:theWebView];
