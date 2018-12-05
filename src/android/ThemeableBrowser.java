@@ -548,9 +548,13 @@ public class ThemeableBrowser extends CordovaPlugin {
         Runnable runnable = new Runnable() {
             @SuppressLint("NewApi")
             public void run() {
+                int theme=android.R.style.Theme_Black_NoTitleBar;
+                if(features.fullscreen){
+                    theme=android.R.style.Theme_Black_NoTitleBar_Fullscreen;
+                }
                 // Let's create the main dialog
                 dialog = new ThemeableBrowserDialog(cordova.getActivity(),
-                        android.R.style.Theme_Black_NoTitleBar,
+                        theme,
                         features.hardwareback);
                 if (!features.disableAnimation) {
                     dialog.getWindow().getAttributes().windowAnimations
@@ -983,14 +987,14 @@ public class ThemeableBrowser extends CordovaPlugin {
                     main.addView(inAppWebView);
                 }
 
-                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                lp.copyFrom(dialog.getWindow().getAttributes());
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+//                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+//                lp.copyFrom(dialog.getWindow().getAttributes());
+//                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+//                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
 
                 dialog.setContentView(main);
                 dialog.show();
-                dialog.getWindow().setAttributes(lp);
+//                dialog.getWindow().setAttributes(lp);
                 // the goal of openhidden is to load the url and not display it
                 // Show() needs to be called to cause the URL to be loaded
                 if(features.hidden) {
