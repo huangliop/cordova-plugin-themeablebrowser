@@ -50,7 +50,8 @@
 
 ## 打开系统浏览器
 
-请在链接后面添加如下参数‘__open-system-browser__=true’
+请在链接后面添加如下参数"__open-system-browser__=true"
+例如
 
 `https://www.google.com?__open-system-browser__=true`
 
