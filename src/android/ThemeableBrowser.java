@@ -1324,12 +1324,7 @@ public class ThemeableBrowser extends CordovaPlugin {
                 } catch (android.content.ActivityNotFoundException e) {
                     Log.e(LOG_TAG, "Error sending sms " + url + ":" + e.toString());
                 }
-            }
-            /**
-             * 添加WEBVIEW中的A标签的拦截,针对长安商城的链接进行特殊处理（跳转到系统浏览器打开URL）
-             * update 2017-03-10
-             */
-            else if(url.startsWith("http") && url.contains("__open-system-browser__=true")){
+            }else if(url.startsWith("http") && url.contains("__open-system-browser__=true")){
                 String urlStr = "__open-system-browser__=true";
                 //跳转到系统浏览器
                 String newurl=getString(url,urlStr);
