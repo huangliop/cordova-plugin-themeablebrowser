@@ -1282,7 +1282,7 @@ public class ThemeableBrowser extends CordovaPlugin {
             } else if (url.startsWith("geo:") 
                        || url.startsWith(WebView.SCHEME_MAILTO) 
                        || url.startsWith("market:")
-                       || url.startsWith("weixin://wap/pay?")
+                       || url.startsWith("weixin:")
                        || url.startsWith("alipays:")
                        || url.startsWith("alipay")) {
                 try {
