@@ -549,18 +549,14 @@ public class ThemeableBrowser extends CordovaPlugin {
             @SuppressLint("NewApi")
             public void run() {
                 int theme=android.R.style.Theme_Black_NoTitleBar;
-                if(features.fullscreen){
-                    theme=android.R.style.Theme_Black_NoTitleBar_Fullscreen;
-                }
                 // Let's create the main dialog
                 dialog = new ThemeableBrowserDialog(cordova.getActivity(),
                         theme,
-                        features.hardwareback);
+                        features.hardwareback,features.fullscreen);
                 if (!features.disableAnimation) {
                     dialog.getWindow().getAttributes().windowAnimations
-                            = android.R.style.Animation_Dialog;
+                            = android.R.style.Animation_Translucent;
                 }
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
                 dialog.setThemeableBrowser(getThemeableBrowser());
 
@@ -1324,7 +1320,12 @@ public class ThemeableBrowser extends CordovaPlugin {
                 } catch (android.content.ActivityNotFoundException e) {
                     Log.e(LOG_TAG, "Error sending sms " + url + ":" + e.toString());
                 }
-            }else if(url.startsWith("http") && url.contains("__open-system-browser__=true")){
+            }
+            /**
+             * 添加WEBVIEW中的A标签的拦截,针对长安商城的链接进行特殊处理（跳转到系统浏览器打开URL）
+             * update 2017-03-10
+             */
+            else if(url.startsWith("http") && url.contains("__open-system-browser__=true")){
                 String urlStr = "__open-system-browser__=true";
                 //跳转到系统浏览器
                 String newurl=getString(url,urlStr);
