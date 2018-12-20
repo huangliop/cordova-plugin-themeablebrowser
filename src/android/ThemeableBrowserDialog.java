@@ -40,11 +40,15 @@ public class ThemeableBrowserDialog extends Dialog {
     boolean hardwareBack;
 
     public ThemeableBrowserDialog(Context context, int theme,
-                                  boolean hardwareBack,boolean isFullscrren) {
+                                  boolean hardwareBack,boolean isFullscrren,int statusBarColor) {
         super(context, theme);
         this.context = context;
         this.hardwareBack = hardwareBack;
-        if(isFullscrren)initTransparentBar();
+        if(isFullscrren){
+            initTransparentBar();
+        }else {
+            initStatusBarColor(statusBarColor);
+        }
     }
 
     public void setThemeableBrowser(ThemeableBrowser browser) {
@@ -85,7 +89,6 @@ public class ThemeableBrowserDialog extends Dialog {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION); //导航栏透明
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS); //强制状态栏透明
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //SDK版本 > = Android5.0
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS); //状态栏栏透明
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION); //导航栏透明
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS); //强制状态栏透明
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // 状态栏字体设置为深色，SYSTEM_UI_FLAG_LIGHT_STATUS_BAR 为SDK23增加
@@ -98,4 +101,13 @@ public class ThemeableBrowserDialog extends Dialog {
         }
     }
 
+    public void initStatusBarColor(int statusBarColor){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(statusBarColor);
+        }
+    }
 }

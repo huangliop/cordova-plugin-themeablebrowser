@@ -21,9 +21,15 @@
 
 ##  添加插件
     cordova plugin add https://github.com/huangliop/cordova-plugin-themeablebrowser-diy.git
+
+## 注意事项
+
+>   尽量不要使用深色的statusbar和toolbar颜色
+>   fullscreen=true和toolbar:{height>0} 不要一起使用
     
 ##  插件改动	
 
+- update at 20181220 添加android下对设置状态栏颜色的支持(即 statusbar:{color})
 - update at 20181204 解决iOS上支付宝和微信，支付后不能返回原来app的问题。安装插件后需要修改如下地方（请看下面的 关于设置URL Scheme）。
 - update at 20180530 解决iOS上状态栏下有一行空白的问题
 - update at 20180302 1.在User-Agent插入标识“ThemeableBrowser/1.0”, 2.添加ThemeableBrowser.closeWindow()，来关系打开的webview
@@ -67,7 +73,7 @@ This plugin launches an in-app web view on top the existing [CordovaWebView](htt
     // Images below are for sample only. They are not imported by this plugin.
     cordova.ThemeableBrowser.open('http://apache.org', '_blank', {
         statusbar: {
-            color: '#ffffffff'
+            color: '#ffffffff' //设置状态栏颜色
         },
         toolbar: {
             height: 44,
@@ -152,8 +158,8 @@ Additional Properties
 
 In addition to InAppBrowser's properties, following properties were added to fulfill this plugin's purpose in a nested JSON object.
 
-+ `statusbar` applicable to only iOS 7+.
-    + `color` sets status bar color for iOS 7+ in RGBA web hex format. eg. `#fff0f0ff`. Default to white. Applicable to only iOS 7+.
++ `statusbar` 
+    + `color`  eg. `#fff0f0ff`. Default to white.
 + `toolbar`
     + `height` sets height of toolbar. Default to 44.
     + `color` sets browser toolbar color in RGBA web hex format. eg. `#fff0f0ff`. Default to white. Also see `image`.

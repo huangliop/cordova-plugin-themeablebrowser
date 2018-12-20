@@ -19,6 +19,7 @@
 package com.initialxy.cordova.themeablebrowser;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -548,11 +549,13 @@ public class ThemeableBrowser extends CordovaPlugin {
         Runnable runnable = new Runnable() {
             @SuppressLint("NewApi")
             public void run() {
-                int theme=android.R.style.Theme_Black_NoTitleBar;
+                int theme=android.R.style.Theme_Light_NoTitleBar;
+                boolean isRealFullScreen=features.toolbar.height==0&&features.fullscreen;
+                int statusColor=hexStringToColor(features.statusbar!=null&&features.statusbar.color!=null?features.statusbar.color:"#ffffffff");
                 // Let's create the main dialog
                 dialog = new ThemeableBrowserDialog(cordova.getActivity(),
                         theme,
-                        features.hardwareback,features.fullscreen);
+                        features.hardwareback,isRealFullScreen,statusColor);
                 if (!features.disableAnimation) {
                     dialog.getWindow().getAttributes().windowAnimations
                             = android.R.style.Animation_Translucent;
@@ -1489,6 +1492,7 @@ public class ThemeableBrowser extends CordovaPlugin {
         public boolean zoom = true;
         public boolean hardwareback = true;
 
+        public StatusBar statusbar;
         public Toolbar toolbar;
         public Title title;
         public BrowserButton backButton;
@@ -1543,6 +1547,9 @@ public class ThemeableBrowser extends CordovaPlugin {
         public int textSize;
     }
 
+    private static class StatusBar{
+        public String color;
+    }
     /**
      * 创建圆形loading，用于在没有toolbar的情况下显示加载状态
      * @return
