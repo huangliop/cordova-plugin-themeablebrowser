@@ -24,8 +24,8 @@
 
 ## 注意事项
 
->   尽量不要使用深色的statusbar和toolbar颜色
->   fullscreen=true和toolbar:{height>0} 不要一起使用
+- 尽量不要使用深色的statusbar和toolbar颜色
+- fullscreen=true和toolbar:{height>0} 不要一起使用
     
 ##  插件改动	
 
