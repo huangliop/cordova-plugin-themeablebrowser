@@ -22,6 +22,7 @@
 #import <Cordova/CDVScreenOrientationDelegate.h>
 #import "NJKWebViewProgress.h"
 #import "NJKWebViewProgressView.h"
+#import "JavaScriptCore/JSContext.h"
 
 #ifdef __CORDOVA_4_0_0
     #import <Cordova/CDVUIWebViewDelegate.h>
@@ -71,6 +72,7 @@
 @property (nonatomic, retain) CDVThemeableBrowserViewController* themeableBrowserViewController;
 @property (nonatomic, copy) NSString* callbackId;
 @property (nonatomic, copy) NSRegularExpression *callbackIdPattern;
+@property (nonatomic, strong) JSContext *jsContext;
 
 - (CDVThemeableBrowserOptions*)parseOptions:(NSString*)options;
 - (void)open:(CDVInvokedUrlCommand*)command;

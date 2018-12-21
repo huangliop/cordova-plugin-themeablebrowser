@@ -29,6 +29,7 @@
     
 ##  插件改动	
 
+- update at 20181221 添加新开的浏览器向Cordova传递数据的支持，详情请看下面
 - update at 20181220 添加android下对设置状态栏颜色的支持(即 statusbar:{color})
 - update at 20181204 解决iOS上支付宝和微信，支付后不能返回原来app的问题。安装插件后需要修改如下地方（请看下面的 关于设置URL Scheme）。
 - update at 20180530 解决iOS上状态栏下有一行空白的问题
@@ -61,6 +62,25 @@
 例如
 
 `https://www.google.com?__open-system-browser__=true`
+
+## 传递数据到Cordova的页面
+
+### ThemeableBrowser内的页面传递数据
+
+```
+ThemeableBrowser&ThemeableBrowser.postMessageToCordova('msg'); //只能传递字符串
+```
+
+### Cordova的页面接收数据
+
+```
+    var wv=cordova.ThemeableBrowser.open(...);
+    wv.addEventListener(cordova.ThemeableBrowser.EVT_WRN, function(e) {
+       if(e.code==='message'){
+            console.log(e.message); // 打印接收的数据
+       }
+    });
+```
 
 ## 使用方法
 This plugin is a fork of [org.apache.cordova.inappbrowser](https://github.com/apache/cordova-plugin-inappbrowser). It attempts to retain most of the features of the InAppBrowser. In fact, for the full list of features inherited from InAppBrowser, please refer to [InAppBrowser's documentation](https://github.com/apache/cordova-plugin-inappbrowser/blob/master/README.md).

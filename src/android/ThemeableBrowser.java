@@ -1571,5 +1571,9 @@ public class ThemeableBrowser extends CordovaPlugin {
         public void closeWindow(){
             closeDialog();
         }
+        @JavascriptInterface
+        public void postMessageToCordova(String msg){
+            emitLog(EVT_WRN,"message",msg);
+        }
     }
 }

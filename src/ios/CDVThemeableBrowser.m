@@ -607,8 +607,17 @@
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
     }
+    [self addPostMessageToCordova];
 }
-
+- (void)addPostMessageToCordova
+{
+        self.jsContext = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+        __block CDVThemeableBrowser *blockSelf=self;
+        self.jsContext[@"postMessageToCordova"] = ^() {
+            NSArray *args = [JSContext currentArguments];
+            [blockSelf emitWarning:@"message" withMessage:args[0]];
+        };
+}
 - (void)webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error
 {
     if (self.callbackId != nil) {
@@ -1515,14 +1524,14 @@
     if([reqUrl hasPrefix:@"https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb"]){
         NSDictionary *headers = [request allHTTPHeaderFields];
         NSString *preStr = @"https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb";
-        if (![[headers objectForKey:@"Referer"] isEqualToString:@"微信合法的支付域名://"] && [request.URL.absoluteString hasPrefix:preStr]) {
+        if (![[headers objectForKey:@"Referer"] isEqualToString:@"cloud.mall.changan.com.cn://"] && [request.URL.absoluteString hasPrefix:preStr]) {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSString* urlStr=[reqUrl componentsSeparatedByString:@"&redirect_url="][0];
                     NSURL *url = [NSURL URLWithString:urlStr];
                     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
                     [req setHTTPMethod:@"GET"];
-                    [req setValue:@"微信合法的支付域名://" forHTTPHeaderField:@"Referer"];
+                    [req setValue:@"cloud.mall.changan.com.cn://" forHTTPHeaderField:@"Referer"];
                     [theWebView loadRequest:req];
                 });
             });
@@ -1575,7 +1584,7 @@
     }
     //Supoort window.close()
     [self.webView stringByEvaluatingJavaScriptFromString:@"ThemeableBrowser={};ThemeableBrowser.closeWindow=window.close=function(){location.href='uniquescheme://window.close';}"];
-    
+
     [self.navigationDelegate webViewDidFinishLoad:theWebView];
     [self.webViewProgressView setProgress:1 animated:NO];
 }
