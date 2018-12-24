@@ -607,16 +607,17 @@
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
     }
-    [self addPostMessageToCordova];
+    [self addPostMessageToCordova:theWebView];
 }
-- (void)addPostMessageToCordova
+- (void)addPostMessageToCordova:(UIWebView*)theWebView
 {
-        self.jsContext = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+        self.jsContext = [theWebView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
         __block CDVThemeableBrowser *blockSelf=self;
         self.jsContext[@"postMessageToCordova"] = ^() {
             NSArray *args = [JSContext currentArguments];
-            [blockSelf emitWarning:@"message" withMessage:args[0]];
+            [blockSelf emitWarning:@"message" withMessage:[args[0] toObject]];
         };
+        [theWebView stringByEvaluatingJavaScriptFromString:@"(!ThemeableBrowser)&&(ThemeableBrowser={});ThemeableBrowser.postMessageToCordova=window.postMessageToCordova"];
 }
 - (void)webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error
 {

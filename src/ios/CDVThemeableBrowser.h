@@ -22,7 +22,7 @@
 #import <Cordova/CDVScreenOrientationDelegate.h>
 #import "NJKWebViewProgress.h"
 #import "NJKWebViewProgressView.h"
-#import "JavaScriptCore/JSContext.h"
+#import <JavaScriptCore/JavaScriptCore.h>
 
 #ifdef __CORDOVA_4_0_0
     #import <Cordova/CDVUIWebViewDelegate.h>
