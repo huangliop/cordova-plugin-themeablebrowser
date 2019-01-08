@@ -68,7 +68,7 @@
 ### ThemeableBrowser内的页面传递数据
 
 ```
-ThemeableBrowser&ThemeableBrowser.postMessageToCordova('msg'); //只能传递字符串
+window.ThemeableBrowser&&window.ThemeableBrowser.postMessageToCordova('msg'); //只能传递字符串
 ```
 
 ### Cordova的页面接收数据
