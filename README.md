@@ -53,7 +53,7 @@
 
 ## 关闭当前窗口
 
-`ThemeableBrowser&ThemeableBrowser.closeWindow();`
+`window.ThemeableBrowser&&window.ThemeableBrowser.closeWindow();`
 
 ## 打开系统浏览器
 
