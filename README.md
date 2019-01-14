@@ -20,7 +20,7 @@
 <a href="https://github.com/initialxy/cordova-plugin-themeablebrowser">原插件地址</a>
 
 ##  添加插件
-    cordova plugin add https://github.com/huangliop/cordova-plugin-themeablebrowser-diy.git
+    cordova plugin add https://github.com/huangliop/cordova-plugin-themeablebrowser.git
 
 ## 注意事项
 
