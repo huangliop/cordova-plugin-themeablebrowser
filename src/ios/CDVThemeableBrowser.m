@@ -564,25 +564,15 @@
     NSArray *subArray = [parameters componentsSeparatedByString:@"&"];
     for (int i = 0; i < subArray.count; i ++) {
         NSArray *dicArr = [subArray[i] componentsSeparatedByString:@"="];
-        [dict setObject:dicArr[1] forKey:dicArr[0]];
+        if(dicArr.count>1)[dict setObject:dicArr[1] forKey:dicArr[0]];
     }
     NSString * flag = [dict objectForKey:@"__open-system-browser__"];
     if (flag && [flag isEqualToString:@"true"]) {
-
-        NSRange range = [urlString rangeOfString:@"&" options:NSBackwardsSearch];
-
-        NSString *fixedUrlStr = [urlString substringWithRange:NSMakeRange(0, range.location)];
-
-        NSURL *fixedUrl = [NSURL URLWithString:fixedUrlStr];
-
+        NSURL *fixedUrl = [NSURL URLWithString:urlString];
         [[UIApplication sharedApplication] openURL:fixedUrl];
-
         return YES;
-
     }else{
-
         return NO;
-
     }
 }
 
